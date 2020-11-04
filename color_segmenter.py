@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import cv2 as cv
+import json
 from functools import partial
 import argparse
 from pprint import pprint
@@ -43,7 +44,7 @@ def main():
     
     hsv_mode = args.segmentate_in_hsv 
     camera_number = int(args.camera_number)
-        
+
     if hsv_mode:
         track_names = ['min H', 'max H', 'min S', 'max S', 'min V', 'max V']
     else:
@@ -100,8 +101,12 @@ def main():
         k = cv.waitKey(1)
         if k == ord('q'):
             break
-        elif k == ord('w') or k==ord('s'):
-            #guardar
+        elif k == ord('w') or k == ord('s'):
+            # save to json file
+            file_name = 'limits.json'
+            with open(file_name, 'w') as file_handle:
+                print('writing dictionary d to file ' + file_name)
+                json.dump(limits_dict, file_handle)  # d is the dicionary
             pass
             
     
