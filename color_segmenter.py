@@ -38,9 +38,11 @@ def main():
     #parsing
     parser = argparse.ArgumentParser(description="Color segmentation")
     parser.add_argument('-hsv', '--segmentate_in_hsv', help = 'If selected, segmentation will be in hsv', action='store_true')
+    parser.add_argument('-cn', '--camera_number', help='Number of camera to use', default='0')
     args = parser.parse_args()
     
     hsv_mode = args.segmentate_in_hsv 
+    camera_number = int(args.camera_number)
         
     if hsv_mode:
         track_names = ['min H', 'max H', 'min S', 'max S', 'min V', 'max V']
@@ -48,7 +50,7 @@ def main():
         track_names = ['min B', 'max B', 'min G', 'max G', 'min R', 'max R']
     
     
-    cap = cv.VideoCapture(2)
+    cap = cv.VideoCapture(camera_number)
     
     cv.namedWindow(window_name)
         #partial function
