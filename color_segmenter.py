@@ -12,7 +12,8 @@ limits_dict = {
         'BH': {'min': 0, 'max': 255},
         'GS': {'min': 0, 'max': 255},
         'RV': {'min': 0, 'max': 255},
-    }
+    },
+    'color_mode': 'bgr',
 }
 
 def onTrackbar(threshold, channel):
@@ -46,8 +47,11 @@ def main():
         
     if hsv_mode:
         track_names = ['min H', 'max H', 'min S', 'max S', 'min V', 'max V']
+        limits_dict["color_mode"] = 'hsv'
     else:
         track_names = ['min B', 'max B', 'min G', 'max G', 'min R', 'max R']
+        limits_dict["color_mode"] = 'bgr'
+
     
     
     cap = cv.VideoCapture(camera_number)
