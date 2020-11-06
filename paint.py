@@ -49,14 +49,18 @@ def main():
             color = (255,0,0)
         elif k == ord('e'):
             color = (255,255,255)
-        elif k != ord('s') and k != ord('l'):
+        elif k == ord('c'):
+            I = np.ones((400,600,3))*255
             color = (0,0,0)
-        
-        if k == ord('l'):
+        elif k == 43:
             brush_size += 1
-        elif k == ord('s'):
+        elif k == 45:
             if brush_size > 1:
-                brush_size += -1
+                brush_size += -1    
+        else:
+            color = (0,0,0)
+            
+        
         
 
 
