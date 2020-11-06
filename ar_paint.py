@@ -3,6 +3,8 @@
 import cv2 as cv
 import numpy as np
 import argparse
+from time import ctime
+
 
 def findCentroid(I, limits_dict):
     #convert color mode if needed
@@ -63,7 +65,16 @@ def keyboardMapping(k,I,frame,AR,brush_size):
         if brush_size > 1:
             brush_size += -1 
     elif k == ord('w') or k == ord('s'):
-        pass #guradar imagem
+        ct = (str(ctime())).replace(' ', '_')
+        filename = "drawing_{}.png".format(ct)
+        save_state = cv.imwrite(filename, I)
+
+        if save_state:
+            print("Image capture saved") # aplicar colorama stuff
+        elif not save_state:
+            print("Error: Image capture not saved")
+
+
     
     
     else:
