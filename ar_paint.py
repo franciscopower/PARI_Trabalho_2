@@ -1,6 +1,13 @@
 #!/usr/bin/python
 
+# PARI ar_paint 2020
+# Bruno Neves,
+# Diogo Santos, 84861
+# Francisco Power,
+
 import cv2 as cv
+import json
+
 import numpy as np
 import argparse
 from time import ctime
@@ -44,13 +51,13 @@ def findCentroid(I, limits_dict):
 
     return (x,y)
 
-def keyboardMapping(k,I,frame,AR,brush_size):
+def keyboardMapping(k, I, frame, args, brush_size):
     if k == ord('r'):
-        color = (0,0,255)
+        color = (0, 0, 255)
     elif k == ord('g'):
-        color = (0,255,0)
+        color = (0, 255, 0)
     elif k == ord('b'):
-        color = (255,0,0)
+        color = (255, 0, 0)
     # elif k == ord('e'):
     #     color = (255,255,255) #extra, dá bastante mais trabalho
     elif k == ord('c'):
@@ -58,7 +65,7 @@ def keyboardMapping(k,I,frame,AR,brush_size):
             I = np.ones(frame.shape)*0
         else:
             I = np.ones(frame.shape)*255
-        color = (0,0,0)
+        color = (0, 0, 0)
     elif k == 43:
         brush_size += 1
     elif k == 45:
@@ -78,23 +85,40 @@ def keyboardMapping(k,I,frame,AR,brush_size):
     
     
     else:
-        color = (0,0,0)
+        color = (0, 0, 0)
             
     return color, brush_size, I
 
 def main():
 
-    #parser
-    parser = argparse.ArgumentParser(description="") #mudar nome
-    parser.add_argument('-cn', '--camera_number', help='Number of camera to use', default='0')
-    #funcionalidade avançada 2 AR, true of false
-    #json file
+    # ----------DEFINITION OF PARSER ARGUMENTS----------------
+    parser = argparse.ArgumentParser(description='Definition of test mode')
+    parser.add_argument('-jf',
+                        '--json_file',
+                        type=str,
+                        default=None,
+                        required=True,
+                        help='json file with this limits defined in color segmenter')
+    parser.add_argument('-cn',
+                        '--camera_number',
+                        type=int,
+                        help='Number of camera to use',
+                        default='0')
+    parser.add_argument('-AR',
+                        '--augmented_reality',
+                        action='store_constant',
+                        const=False,
+                        default='0',
+                        help='Definition of paint display')
+
     args = parser.parse_args()
-    
-    
-    #load json files
-    
-    #window names
+    print(vars(args))
+
+    # Load json files
+    with open(args.json_file) as f:
+        Limits_data = json.load(f)
+
+    # Window names
     paint_window = "Paint"
     live_window = "Live feed"
     
@@ -103,8 +127,7 @@ def main():
     #inicialização do pincel    
     color = (0,0,0)
     brush_size = 2
-    
-    
+
     camera_number = int(args.camera_number)
     cap = cv.VideoCapture(camera_number)
     _,frame = cap.read()
@@ -127,13 +150,12 @@ def main():
         
         # cv.setMouseCallback(window_name, myOnMouse)  
         
-        color, brush_size, I = keyboardMapping(k,I,frame,AR,brush_size)
+        color, brush_size, I = keyboardMapping(k, I, frame, args, brush_size)
         
         k = cv.waitKey(1)
     
     
         
-    
 
 if __name__ == "__main__":
     main()
