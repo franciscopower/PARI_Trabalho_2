@@ -5,8 +5,40 @@ import numpy as np
 import argparse
 
 def findCentroid(I, limits_dict):
-    #binarização
-    #encontar o centroide do objeto maior, (x,y)
+    #convert color mode if needed
+    if limits_dict["color_mode"] == 'hsv':
+        I = cv.cvtColor(I, cv.COLOR_BGR2HSV)
+    
+    # segmentate the image
+    I_bin = cv.inRange(
+        I,
+        (
+            limits_dict["limits"]['BH']['min'],
+            limits_dict["limits"]['GS']['min'],
+            limits_dict["limits"]['RV']['min'],
+        ),
+        (
+            limits_dict["limits"]['BH']['max'],
+            limits_dict["limits"]['GS']['max'],
+            limits_dict["limits"]['RV']['max'],
+        )
+    )
+
+    #create labels
+    _, _, stats, centroids = cv.connectedComponentsWithStats(I_bin, connectivity=4)
+    #identify largest area
+    stats[np.where(stats[:,4] == stats[:,4].max())[0][0],:] = 0
+    big_area_idx = np.where(stats[:,4] == stats[:,4].max())[0][0]
+    
+    # # discard if area is too small 
+    # if stats[big_area_idx,4] < 1000:
+    #     x = 0
+    #     y = 0
+    
+    #find centroid
+    x,y = centroids[big_area_idx]
+    x = int(x)
+    y = int(y)
 
     return (x,y)
 
@@ -56,7 +88,8 @@ def main():
     live_window = "Live feed"
     
         
-    k = None
+        
+    #inicialização do pincel    
     color = (0,0,0)
     brush_size = 2
     
@@ -70,6 +103,7 @@ def main():
     else:
         I = np.ones(frame.shape)*255  
     
+    # ------ começa o video -------------------
     k=''
     while cap.isOpened() and k != ord('q'):
     
@@ -80,7 +114,7 @@ def main():
         
         color, brush_size, I = keyboardMapping(k,I,frame,AR,brush_size)
         
-        k = cv.waitKey(0)
+        k = cv.waitKey(1)
     
     
         
