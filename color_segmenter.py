@@ -28,9 +28,9 @@ def onTrackbar(threshold, channel):
         limits_dict["limits"]['GS']['min'] = threshold
     elif channel == 'maxGS':
         limits_dict["limits"]['GS']['max'] = threshold
-    elif  channel == 'minRV':
+    elif channel == 'minRV':
         limits_dict["limits"]['RV']['min'] = threshold
-    elif  channel == 'maxRV':
+    elif channel == 'maxRV':
         limits_dict["limits"]['RV']['max'] = threshold   
     
     
