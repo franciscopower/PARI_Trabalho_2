@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
 # PARI ar_paint 2020
-# Bruno Neves,
+# Bruno Nunes, 80614
 # Diogo Santos, 84861
-# Francisco Power,
+# Francisco Power, 84706
 
 import cv2 as cv
 import json
@@ -51,7 +51,7 @@ def findCentroid(I, limits_dict):
 
     return (x,y)
 
-def keyboardMapping(k, I, frame, args, brush_size):
+def keyboardMapping(k, I, frame, AR, brush_size, opacity):
     if k == ord('r'):
         color = (0, 0, 255)
     elif k == ord('g'):
@@ -80,14 +80,23 @@ def keyboardMapping(k, I, frame, args, brush_size):
             print("Image capture saved") # aplicar colorama stuff
         else:
             print("Error: Image capture not saved")
-
-
-    
-    
     else:
         color = (0, 0, 0)
+        
+        #add high and low  opacity
             
     return color, brush_size, I
+
+def paint(frame, p1, p2, color, brush_size, AR, opacity):
+    I = np.ones(frame.shape)*255
+    
+    cv.line(I, p1, p2, color, brush_size)
+    
+    if AR:
+        I = cv.addWeighted(frame, 1, I, opacity, 0)
+    
+    return I
+
 
 def main():
 
@@ -106,27 +115,26 @@ def main():
                         default='0')
     parser.add_argument('-AR',
                         '--augmented_reality',
-                        action='store_constant',
-                        const=False,
-                        default='0',
+                        action='store_true',
                         help='Definition of paint display')
 
     args = parser.parse_args()
     print(vars(args))
+    
+    AR = args.augmented_reality
 
     # Load json files
     with open(args.json_file) as f:
-        Limits_data = json.load(f)
+        limits_dict = json.load(f)
 
     # Window names
     paint_window = "Paint"
     live_window = "Live feed"
-    
-        
         
     #inicialização do pincel    
     color = (0,0,0)
     brush_size = 2
+    opacity = 0.8
 
     camera_number = int(args.camera_number)
     cap = cv.VideoCapture(camera_number)
@@ -134,23 +142,26 @@ def main():
         
     # ------ começa o video -------------------
     k=''
+    p1 = (0,0)
+    
     while cap.isOpened() and k != ord('q'):
     
         _,frame = cap.read()
         
-        centroid = findCentroid(frame, limits_dict)
         
-        I = paint(frame, centroid, color, brush_size, AR)
+        p2 = findCentroid(frame, limits_dict)
         
+        if p1 != (0,0):
+            I = paint(frame, p1, p2, color, brush_size, AR, opacity)
         
+ 
         
+        color, brush_size, I = keyboardMapping(k, I, frame, AR, brush_size, opacity)
         
-        # cv.imshow(window_name, I)
-        # myOnMouse = partial(onMouse, I=I, color=color, window_name=window_name, brush_size=brush_size)
+        cv.imshow(live_window, frame)
+        cv.imshow(paint_window, I)
         
-        # cv.setMouseCallback(window_name, myOnMouse)  
-        
-        color, brush_size, I = keyboardMapping(k, I, frame, args, brush_size)
+        p1 = p2
         
         k = cv.waitKey(1)
     
