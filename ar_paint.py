@@ -33,7 +33,7 @@ def findCentroid(I, limits_dict):
     big_area_idx = np.where(stats[:,4] == stats[:,4].max())[0][0]
     
     # # discard if area is too small 
-    # if stats[big_area_idx,4] < 1000:
+    # if stats[big_area_idx,4] < I.shape[0]*I.shape[1]*0.05:
     #     x = 0
     #     y = 0
     
@@ -55,7 +55,7 @@ def keyboardMapping(k,I,frame,AR,brush_size):
     #     color = (255,255,255) #extra, dá bastante mais trabalho
     elif k == ord('c'):
         if AR:
-            I = frame
+            I = np.ones(frame.shape)*0
         else:
             I = np.ones(frame.shape)*255
         color = (0,0,0)
@@ -68,10 +68,10 @@ def keyboardMapping(k,I,frame,AR,brush_size):
         ct = (str(ctime())).replace(' ', '_')
         filename = "drawing_{}.png".format(ct)
         save_state = cv.imwrite(filename, I)
-
+        #add delay ?
         if save_state:
             print("Image capture saved") # aplicar colorama stuff
-        elif not save_state:
+        else:
             print("Error: Image capture not saved")
 
 
@@ -108,16 +108,20 @@ def main():
     camera_number = int(args.camera_number)
     cap = cv.VideoCapture(camera_number)
     _,frame = cap.read()
-    
-    if AR:
-        I = np.copy(frame)
-    else:
-        I = np.ones(frame.shape)*255  
-    
+        
     # ------ começa o video -------------------
     k=''
     while cap.isOpened() and k != ord('q'):
     
+        _,frame = cap.read()
+        
+        centroid = findCentroid(frame, limits_dict)
+        
+        I = paint(frame, centroid, color, brush_size, AR)
+        
+        
+        
+        
         # cv.imshow(window_name, I)
         # myOnMouse = partial(onMouse, I=I, color=color, window_name=window_name, brush_size=brush_size)
         
