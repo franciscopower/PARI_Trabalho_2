@@ -90,12 +90,15 @@ def keyboardMapping(k, I, frame, AR, brush_size, opacity, clr):
     return color, brush_size, I
 
 def paint(frame, I, p1, p2, color, brush_size, AR, opacity):    
+    
     cv.line(I, p1, p2, color, brush_size)
     
     if AR:
+        
         I[I==255] = 0
-        print(type(I))
-        # I = cv.addWeighted(frame, 1, I, opacity, 0)
+        
+        I = I.astype(np.uint8)
+        I = cv.addWeighted(frame, 1, I, opacity, 0)
     
     return I
 
@@ -151,7 +154,6 @@ def main():
     while cap.isOpened() and k != ord('q'):
     
         _,frame = cap.read()
-        
         
         p2 = findCentroid(frame, limits_dict)
         
