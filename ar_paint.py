@@ -12,7 +12,6 @@ import numpy as np
 import argparse
 from time import ctime
 
-
 def findCentroid(I, limits_dict):
     #convert color mode if needed
     if limits_dict["color_mode"] == 'hsv':
@@ -48,10 +47,10 @@ def findCentroid(I, limits_dict):
     #     x = 0
     #     y = 0
     
-    # # discard if it cannot find any whitepoints
-    # if len(stats) == 1:
-    #     x=0
-    #     y=0
+    # discard if it cannot find any whitepoints
+    if len(stats) == 1:
+        x=0
+        y=0
 
     #show binarized image
     # cv.imshow('bin img',I_bin)
@@ -103,22 +102,22 @@ def keyboardMapping(k, I, frame, AR, brush_size, opacity, clr):
             
     return color, brush_size, I
 
-def paint(frame, I, p1, p2, color, brush_size, AR, opacity):    
+def paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity):    
     
-    
-    cv.line(I, p1, p2, color, brush_size)
+    if drawing:
+        cv.line(I, p1, p2, color, brush_size)
+        
     I_f = np.copy(I)
     
     if AR:
         I_f = I_f.astype(np.uint8)
         
-        I_f = cv.addWeighted(frame, 1, I_f, 1, 0)
+        I_f = cv.addWeighted(frame, 1, I_f, opacity, 0)
     
     return I,I_f
 
 
 def main():
-
     # ----------DEFINITION OF PARSER ARGUMENTS----------------
     parser = argparse.ArgumentParser(description='Definition of test mode')
     parser.add_argument('-jf',
@@ -167,33 +166,29 @@ def main():
     
     #brush initializarion    
     brush_size = 2
-    opacity = 0.8
+    opacity = 1
     
     k=''
     p1 = (0,0)
+    drawing = False
     # ------ video starts-------------------
     while cap.isOpened() and k != ord('q'):
     
         _,frame = cap.read()
-        
         p2 = findCentroid(frame, limits_dict)
+        if p1 == (0,0) or p2 ==(0,0):
+            drawing = False
+        else: 
+            drawing = True
         
-        if p1 != (0,0):
-            I, I_f = paint(frame, I, p1, p2, color, brush_size, AR, opacity)
+        I, I_f = paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity)
         
         color, brush_size, I = keyboardMapping(k, I, frame, AR, brush_size, opacity, color)
         p1 = p2
         
         cv.imshow(live_window, frame)
         cv.imshow(paint_window, I_f)
-        
-        # print(p1)
-        # print(p2)
-        # print('----------')
-        
-        
-        
-        
+
         k = cv.waitKey(1)
         
 cv.destroyAllWindows()
