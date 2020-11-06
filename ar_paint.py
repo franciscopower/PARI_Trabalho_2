@@ -49,12 +49,12 @@ def findCentroid(I, limits_dict):
     #     y = 0
     
     # # discard if it cannot find any whitepoints
-    if len(stats) == 1:
-        x=0
-        y=0
+    # if len(stats) == 1:
+    #     x=0
+    #     y=0
 
     #show binarized image
-    cv.imshow('bin img',I_bin)
+    # cv.imshow('bin img',I_bin)
     
     return (x,y)
 
