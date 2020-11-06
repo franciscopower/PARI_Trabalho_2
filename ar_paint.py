@@ -38,17 +38,24 @@ def findCentroid(I, limits_dict):
     #identify largest area
     stats[np.where(stats[:,4] == stats[:,4].max())[0][0],:] = 0
     big_area_idx = np.where(stats[:,4] == stats[:,4].max())[0][0]
+    #find centroid
+    x,y = centroids[big_area_idx]
+    x = int(x)
+    y = int(y)
     
     # # discard if area is too small 
     # if stats[big_area_idx,4] < I.shape[0]*I.shape[1]*0.05:
     #     x = 0
     #     y = 0
     
-    #find centroid
-    x,y = centroids[big_area_idx]
-    x = int(x)
-    y = int(y)
+    # # discard if it cannot find any whitepoints
+    if len(stats) == 1:
+        x=0
+        y=0
 
+    #show binarized image
+    cv.imshow('bin img',I_bin)
+    
     return (x,y)
 
 def keyboardMapping(k, I, frame, AR, brush_size, opacity, clr):
@@ -61,13 +68,17 @@ def keyboardMapping(k, I, frame, AR, brush_size, opacity, clr):
     elif k == ord('b'):
         color = (255, 0, 0)
     elif k == ord('e'):
-        color = (255,255,255)
+        if AR:
+            color = (0,0,0)
+        else:
+            color = (255,255,255)
     elif k == ord('c'):
         if AR:
             I = np.ones(frame.shape)*0
+            color = (255,255,255)
         else:
             I = np.ones(frame.shape)*255
-        color = (0, 0, 0)
+            color = (0, 0, 0)
     elif k == 43:
         brush_size += 1
     elif k == 45:
@@ -83,7 +94,10 @@ def keyboardMapping(k, I, frame, AR, brush_size, opacity, clr):
         else:
             print("Error: Image capture not saved")
     elif k == ord('p') or k == ord('k'):
-        color = (0, 0, 0)
+        if AR:
+            color = (255,255,255)
+        else:
+            color = (0, 0, 0)
         
         #add high and low  opacity
             
@@ -91,16 +105,16 @@ def keyboardMapping(k, I, frame, AR, brush_size, opacity, clr):
 
 def paint(frame, I, p1, p2, color, brush_size, AR, opacity):    
     
+    
     cv.line(I, p1, p2, color, brush_size)
+    I_f = np.copy(I)
     
     if AR:
+        I_f = I_f.astype(np.uint8)
         
-        I[I==255] = 0
-        
-        I = I.astype(np.uint8)
-        I = cv.addWeighted(frame, 1, I, opacity, 0)
+        I_f = cv.addWeighted(frame, 1, I_f, 1, 0)
     
-    return I
+    return I,I_f
 
 
 def main():
@@ -135,22 +149,29 @@ def main():
     # Window names
     paint_window = "Paint"
     live_window = "Live feed" 
-        
-        
-    #brush initializarion    
-    color = (0,0,0)
-    brush_size = 2
-    opacity = 0.8
 
     camera_number = int(args.camera_number)
     cap = cv.VideoCapture(camera_number)
     _,frame = cap.read()
-    I = np.ones(frame.shape)*255    
-    # ------ video starts-------------------
+    
+    # initialize base canvas and brush color
+    if AR:
+        I = np.zeros(frame.shape)
+        color = (255,255,255)
+    else:
+        I = np.ones(frame.shape)*255   
+        color = (0,0,0)  
+        
+    # initialize final canvas
+    I_f = np.copy(I)   
+    
+    #brush initializarion    
+    brush_size = 2
+    opacity = 0.8
+    
     k=''
     p1 = (0,0)
-    
-    
+    # ------ video starts-------------------
     while cap.isOpened() and k != ord('q'):
     
         _,frame = cap.read()
@@ -158,18 +179,24 @@ def main():
         p2 = findCentroid(frame, limits_dict)
         
         if p1 != (0,0):
-            I = paint(frame, I, p1, p2, color, brush_size, AR, opacity)
+            I, I_f = paint(frame, I, p1, p2, color, brush_size, AR, opacity)
         
         color, brush_size, I = keyboardMapping(k, I, frame, AR, brush_size, opacity, color)
+        p1 = p2
         
         cv.imshow(live_window, frame)
-        cv.imshow(paint_window, I)
+        cv.imshow(paint_window, I_f)
         
-        p1 = p2
+        # print(p1)
+        # print(p2)
+        # print('----------')
+        
+        
+        
         
         k = cv.waitKey(1)
         
-    
+cv.destroyAllWindows()
     
         
 
