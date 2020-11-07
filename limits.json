@@ -1,1 +1,1 @@
-{"limits": {"GS": {"max": 255, "min": 61}, "RV": {"max": 255, "min": 0}, "BH": {"max": 255, "min": 0}}}
+{"color_mode": "hsv", "limits": {"GS": {"max": 164, "min": 89}, "RV": {"max": 205, "min": 120}, "BH": {"max": 86, "min": 55}}}
