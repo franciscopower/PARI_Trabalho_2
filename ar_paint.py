@@ -12,14 +12,24 @@ import numpy as np
 import argparse
 from time import ctime
 
-def findCentroid(I, limits_dict, SP):
+def findCentroid(frame, limits_dict, SP):
+    """[summary]
+
+    Args:
+        frame ([type]): [description]
+        limits_dict ([type]): [description]
+        SP ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     #convert color mode if needed
     if limits_dict["color_mode"] == 'hsv':
-        I = cv.cvtColor(I, cv.COLOR_BGR2HSV)
+        frame = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
     
     # segmentate the image
     I_bin = cv.inRange(
-        I,
+        frame,
         (
             limits_dict["limits"]['BH']['min'],
             limits_dict["limits"]['GS']['min'],
@@ -42,29 +52,48 @@ def findCentroid(I, limits_dict, SP):
     x = int(x)
     y = int(y)
 
+    #show selected area
+    
+    #show centroid of selected area    
+    # frame_one_area = cv.circle(frame_one_area, (x,y), 5, (0,0,255), -1)
+        
+    #show binarized image
+    cv.imshow('bin img',I_bin)
+    # cv.imshow('Original selected area', frame_one_area)
+    
+    #use shake prevention
     if SP:
         # discard if area is too small
-        if stats[big_area_idx, 4] < I.shape[0]*I.shape[1]*0.01:
+        if stats[big_area_idx, 4] < frame.shape[0]*frame.shape[1]*0.01:
             x = 0
             y = 0
-
         # discard if it cannot find any whitepoints
         if len(stats) == 1:
             x = 0
             y = 0
-
     else:
         pass
-    #show selected area
-    
-    #show centroid of selected area    
-        
-    #show binarized image
-    cv.imshow('bin img',I_bin)
     
     return (x,y)
 
+# -------------------------------------------------------------------------
+
 def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr):
+    """[summary]
+
+    Args:
+        k ([type]): [description]
+        I ([type]): [description]
+        I_f ([type]): [description]
+        frame ([type]): [description]
+        AR ([type]): [description]
+        brush_size ([type]): [description]
+        opacity ([type]): [description]
+        clr ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     color = clr
     
     if k == ord('r'):
@@ -104,14 +133,34 @@ def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr):
             color = (255,255,255)
         else:
             color = (0, 0, 0)
-    elif k == ord('h') and opacity <1:
-        opacity += 0.1
-    elif k == ord('l') and opacity >0:
-        opacity -= 0.1
+    elif k == ord('h') and opacity < 1.0:
+        opacity = opacity + 0.1
+        print(opacity)
+    elif k == ord('l') and opacity >0.05:
+        opacity = opacity - 0.1
+        print(opacity)
             
     return color, brush_size, opacity, I
 
+# -------------------------------------------------------------------------
+
 def paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity):    
+    """[summary]
+
+    Args:
+        drawing ([type]): [description]
+        frame ([type]): [description]
+        I ([type]): [description]
+        p1 ([type]): [description]
+        p2 ([type]): [description]
+        color ([type]): [description]
+        brush_size ([type]): [description]
+        AR ([type]): [description]
+        opacity ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
 
     if drawing:
         cv.line(I, p1, p2, color, brush_size)
@@ -134,8 +183,11 @@ def paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity):
     
     return I,I_f
 
+# -------------------------------------------------------------------------
 
 def main():
+    """[summary]
+    """
     # ----------DEFINITION OF PARSER ARGUMENTS----------------
     parser = argparse.ArgumentParser(description='Definition of test mode')
     parser.add_argument('-jf',
@@ -188,8 +240,8 @@ def main():
     I_f = np.copy(I)   
     
     #brush initializarion    
-    brush_size = 2
-    opacity = 0.5
+    brush_size = 10
+    opacity = 1.0
     
     k=''
     p1 = (0,0)
