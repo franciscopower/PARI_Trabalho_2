@@ -97,10 +97,12 @@ def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr):
             color = (255,255,255)
         else:
             color = (0, 0, 0)
-        
-        #add high and low  opacity
+    elif k == ord('h') and opacity <1:
+        opacity += 0.1
+    elif k == ord('l') and opacity >0:
+        opacity -= 0.1
             
-    return color, brush_size, I
+    return color, brush_size, opacity, I
 
 def paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity):    
     
@@ -110,9 +112,18 @@ def paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity):
     I_f = np.copy(I)
     
     if AR:
-        I_f = I_f.astype(np.uint8)
-        
-        I_f = cv.addWeighted(frame, 1, I_f, opacity, 0)
+        if opacity == 1:
+            I_f = np.copy(frame)
+            hsv = np.copy(I)
+            hsv = hsv.astype(np.uint8)
+            hsv = cv.cvtColor(hsv, cv.COLOR_BGR2HSV)
+            M = 255-cv.inRange(hsv, (0,0,0), (255,0,0))
+            M = M.astype(np.uint8)
+            I_f[M==255] = I[M==255]
+            
+        else:
+            I_f = I_f.astype(np.uint8)
+            I_f = cv.addWeighted(frame, 1, I_f, opacity, 0)
     
     return I,I_f
 
@@ -166,7 +177,7 @@ def main():
     
     #brush initializarion    
     brush_size = 2
-    opacity = 1
+    opacity = 0.5
     
     k=''
     p1 = (0,0)
@@ -183,7 +194,7 @@ def main():
         
         I, I_f = paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity)
         
-        color, brush_size, I = keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, color)
+        color, brush_size, opacity, I = keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, color)
         p1 = p2
         
         cv.imshow(live_window, frame)
