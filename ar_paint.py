@@ -57,7 +57,7 @@ def findCentroid(I, limits_dict):
     
     return (x,y)
 
-def keyboardMapping(k, I, frame, AR, brush_size, opacity, clr):
+def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr):
     color = clr
     
     if k == ord('r'):
@@ -67,17 +67,10 @@ def keyboardMapping(k, I, frame, AR, brush_size, opacity, clr):
     elif k == ord('b'):
         color = (255, 0, 0)
     elif k == ord('e'):
-        if AR:
-            color = (0,0,0)
-        else:
-            color = (255,255,255)
+        color = (255,255,255)
     elif k == ord('c'):
-        if AR:
-            I = np.ones(frame.shape)*0
-            color = (255,255,255)
-        else:
-            I = np.ones(frame.shape)*255
-            color = (0, 0, 0)
+        I = np.ones(frame.shape)*255
+        color = (0, 0, 0)
     elif k == 43:
         brush_size += 1
     elif k == 45:
@@ -86,17 +79,14 @@ def keyboardMapping(k, I, frame, AR, brush_size, opacity, clr):
     elif k == ord('w') or k == ord('s'): 
         ct = (str(ctime())).replace(' ', '_')
         filename = "drawing_{}.png".format(ct)
-        save_state = cv.imwrite(filename, I)
+        save_state = cv.imwrite(filename, I_f)
         #add delay ?
         if save_state:
             print("Image capture saved") # apply colorama stuff
         else:
             print("Error: Image capture not saved")
     elif k == ord('p') or k == ord('k'):
-        if AR:
-            color = (255,255,255)
-        else:
-            color = (0, 0, 0)
+        color = (0, 0, 0)
         
         #add high and low  opacity
             
@@ -106,13 +96,18 @@ def paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity):
     
     if drawing:
         cv.line(I, p1, p2, color, brush_size)
-        
-    I_f = np.copy(I)
-    
+            
     if AR:
-        I_f = I_f.astype(np.uint8)
+        I_f = np.copy(frame)
+        hsv = np.copy(I)
+        hsv = hsv.astype(np.uint8)
+        hsv = cv.cvtColor(hsv, cv.COLOR_BGR2HSV)
+        M = 255-cv.inRange(hsv, (0,0,254), (255,1,255))
+        M = M.astype(np.uint8)
         
-        I_f = cv.addWeighted(frame, 1, I_f, opacity, 0)
+        I_f[M==255] = I[M==255]
+    else:
+        I_f = np.copy(I)
     
     return I,I_f
 
@@ -154,12 +149,8 @@ def main():
     _,frame = cap.read()
     
     # initialize base canvas and brush color
-    if AR:
-        I = np.zeros(frame.shape)
-        color = (255,255,255)
-    else:
-        I = np.ones(frame.shape)*255   
-        color = (0,0,0)  
+    I = np.ones(frame.shape)*255   
+    color = (0,0,0)  
         
     # initialize final canvas
     I_f = np.copy(I)   
@@ -183,7 +174,7 @@ def main():
         
         I, I_f = paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity)
         
-        color, brush_size, I = keyboardMapping(k, I, frame, AR, brush_size, opacity, color)
+        color, brush_size, I = keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, color)
         p1 = p2
         
         cv.imshow(live_window, frame)
