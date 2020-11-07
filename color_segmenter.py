@@ -111,10 +111,11 @@ def main():
             with open(file_name, 'w') as file_handle:
                 print('writing dictionary d to file ' + file_name)
                 json.dump(limits_dict, file_handle)  # d is the dicionary
+                pprint(limits_dict)
             pass
             
     
-    pprint(limits_dict)
+    
     cap.release()
     cv.destroyAllWindows()
     
