@@ -33,7 +33,7 @@ def findCentroid(I, limits_dict):
     )
 
     #create labels
-    _, _, stats, centroids = cv.connectedComponentsWithStats(I_bin, connectivity=4)
+    _, labels, stats, centroids = cv.connectedComponentsWithStats(I_bin, connectivity=4)
     #identify largest area
     stats[np.where(stats[:,4] == stats[:,4].max())[0][0],:] = 0
     big_area_idx = np.where(stats[:,4] == stats[:,4].max())[0][0]
@@ -51,6 +51,10 @@ def findCentroid(I, limits_dict):
     if len(stats) == 1:
         x=0
         y=0
+        
+    #show selected area
+    
+    #show centroid of selected area    
         
     #show binarized image
     cv.imshow('bin img',I_bin)
@@ -105,7 +109,7 @@ def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr):
     return color, brush_size, opacity, I
 
 def paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity):    
-    
+
     if drawing:
         cv.line(I, p1, p2, color, brush_size)
         
@@ -171,7 +175,7 @@ def main():
     else:
         I = np.ones(frame.shape)*255   
         color = (0,0,0)  
-        
+        cv.cvtColor(I, cv.color_bgr2)
     # initialize final canvas
     I_f = np.copy(I)   
     
@@ -187,6 +191,7 @@ def main():
     
         _,frame = cap.read()
         p2 = findCentroid(frame, limits_dict)
+        
         if p1 == (0,0) or p2 ==(0,0):
             drawing = False
         else: 
