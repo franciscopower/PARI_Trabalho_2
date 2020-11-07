@@ -42,18 +42,18 @@ def findCentroid(I, limits_dict):
     x = int(x)
     y = int(y)
     
-    # # discard if area is too small 
-    # if stats[big_area_idx,4] < I.shape[0]*I.shape[1]*0.05:
-    #     x = 0
-    #     y = 0
+    # discard if area is too small 
+    if stats[big_area_idx,4] < I.shape[0]*I.shape[1]*0.01:
+        x = 0
+        y = 0
     
     # discard if it cannot find any whitepoints
     if len(stats) == 1:
         x=0
         y=0
-
+        
     #show binarized image
-    # cv.imshow('bin img',I_bin)
+    cv.imshow('bin img',I_bin)
     
     return (x,y)
 
