@@ -7,7 +7,7 @@
 
 import cv2 as cv
 import json
-
+from colorama import Fore, Style
 import numpy as np
 import argparse
 from time import ctime
@@ -189,26 +189,27 @@ def main():
     """[summary]
     """
     # ----------DEFINITION OF PARSER ARGUMENTS----------------
-    parser = argparse.ArgumentParser(description='Definition of test mode')
-    parser.add_argument('-jf',
+    parser = argparse.ArgumentParser(description='Definition of ' + Fore.RED + 'paint parameters' + Style.RESET_ALL)
+    parser.add_argument('-' + Fore.CYAN + 'jf' + Fore.RESET,
                         '--json_file',
                         type=str,
                         default=None,
                         required=True,
-                        help='json file with this limits defined in color segmenter')
-    parser.add_argument('-cn',
+                        help='json file with this ' + Fore.GREEN + 'limits ' + Style.RESET_ALL + 'defined in color segmenter')
+    parser.add_argument('-' + Fore.CYAN + 'cn' + Fore.RESET,
                         '--camera_number',
                         type=int,
-                        help='Number of camera to use',
+                        help='Number of ' + Fore.GREEN + ' camera ' + Style.RESET_ALL + 'to use',
                         default='0')
-    parser.add_argument('-AR',
+    parser.add_argument('-' + Fore.CYAN + 'AR' + Fore.RESET,
                         '--augmented_reality',
                         action='store_true',
-                        help='Definition of paint display')
-    parser.add_argument('-USP',
+                        help='Definition of ' + Fore.GREEN + 'paint type ' + Style.RESET_ALL + 'display')
+    parser.add_argument('-' + Fore.CYAN + 'USP' + Fore.RESET,
                         '--use_shake_prevention',
                         action='store_true',
-                        help='Add function - shake prevention')
+                        help='Add function - ' + Fore.GREEN + 'shake prevention' + Style.RESET_ALL)
+
 
     args = parser.parse_args()
     print(vars(args))
