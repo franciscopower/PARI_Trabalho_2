@@ -12,7 +12,7 @@ import numpy as np
 import argparse
 from time import ctime
 
-def findCentroid(I, limits_dict):
+def findCentroid(I, limits_dict, SP):
     #convert color mode if needed
     if limits_dict["color_mode"] == 'hsv':
         I = cv.cvtColor(I, cv.COLOR_BGR2HSV)
@@ -35,23 +35,26 @@ def findCentroid(I, limits_dict):
     #create labels
     _, labels, stats, centroids = cv.connectedComponentsWithStats(I_bin, connectivity=4)
     #identify largest area
-    stats[np.where(stats[:,4] == stats[:,4].max())[0][0],:] = 0
-    big_area_idx = np.where(stats[:,4] == stats[:,4].max())[0][0]
+    stats[np.where(stats[:, 4] == stats[:, 4].max())[0][0], :] = 0
+    big_area_idx = np.where(stats[:, 4] == stats[:, 4].max())[0][0]
     #find centroid
-    x,y = centroids[big_area_idx]
+    x, y = centroids[big_area_idx]
     x = int(x)
     y = int(y)
-    
-    # discard if area is too small 
-    if stats[big_area_idx,4] < I.shape[0]*I.shape[1]*0.01:
-        x = 0
-        y = 0
-    
-    # discard if it cannot find any whitepoints
-    if len(stats) == 1:
-        x=0
-        y=0
-        
+
+    if SP:
+        # discard if area is too small
+        if stats[big_area_idx, 4] < I.shape[0]*I.shape[1]*0.01:
+            x = 0
+            y = 0
+
+        # discard if it cannot find any whitepoints
+        if len(stats) == 1:
+            x = 0
+            y = 0
+
+    else:
+        pass
     #show selected area
     
     #show centroid of selected area    
@@ -150,11 +153,16 @@ def main():
                         '--augmented_reality',
                         action='store_true',
                         help='Definition of paint display')
+    parser.add_argument('-USP',
+                        '--use_shake_prevention',
+                        action='store_true',
+                        help='Add function - shake prevention')
 
     args = parser.parse_args()
     print(vars(args))
     
     AR = args.augmented_reality
+    SP = args.use_shake_prevention
 
     # Load json files
     with open(args.json_file) as f:
@@ -190,7 +198,7 @@ def main():
     while cap.isOpened() and k != ord('q'):
     
         _,frame = cap.read()
-        p2 = findCentroid(frame, limits_dict)
+        p2 = findCentroid(frame, limits_dict, SP)
         
         if p1 == (0,0) or p2 ==(0,0):
             drawing = False
