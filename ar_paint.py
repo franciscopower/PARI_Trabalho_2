@@ -5,23 +5,26 @@
 # Diogo Santos, 84861
 # Francisco Power, 84706
 
+# IMPORTS -------------------------
 import cv2 as cv
 import json
 from colorama import Fore, Style
 import numpy as np
 import argparse
 from time import ctime
+# ---------------------------------
 
 def findCentroid(frame, limits_dict, SP):
-    """[summary]
-
+    """Find the centroid of the largest blob given in an image, given a certain dictionary with binarization limits
+        If shake prevention (SP) mode is active, return centroid as (0,0) 
+        
     Args:
-        frame ([type]): [description]
-        limits_dict ([type]): [description]
-        SP ([type]): [description]
+        frame (np.ndarray): Original Image
+        limits_dict (dictionary): dictionary with binarization limits and color space
+        SP (boolean): Shake prevention mode
 
     Returns:
-        [type]: [description]
+        tuple: (x,y) coordinates of centroid of largest blob
     """
     #convert color mode if needed
     if limits_dict["color_mode"] == 'hsv':
