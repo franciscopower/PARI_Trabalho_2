@@ -57,7 +57,7 @@ def findCentroid(I, limits_dict):
     
     return (x,y)
 
-def keyboardMapping(k, I, frame, AR, brush_size, opacity, clr):
+def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr):
     color = clr
     
     if k == ord('r'):
@@ -86,7 +86,7 @@ def keyboardMapping(k, I, frame, AR, brush_size, opacity, clr):
     elif k == ord('w') or k == ord('s'): 
         ct = (str(ctime())).replace(' ', '_')
         filename = "drawing_{}.png".format(ct)
-        save_state = cv.imwrite(filename, I)
+        save_state = cv.imwrite(filename, I_f)
         #add delay ?
         if save_state:
             print("Image capture saved") # apply colorama stuff
@@ -183,7 +183,7 @@ def main():
         
         I, I_f = paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity)
         
-        color, brush_size, I = keyboardMapping(k, I, frame, AR, brush_size, opacity, color)
+        color, brush_size, I = keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, color)
         p1 = p2
         
         cv.imshow(live_window, frame)
