@@ -26,6 +26,10 @@ def findCentroid(frame, limits_dict, SP):
     Returns:
         tuple: (x,y) coordinates of centroid of largest blob
     """
+    
+    #create copy of frame
+    frame_one_area = np.copy(frame)
+    
     #convert color mode if needed
     if limits_dict["color_mode"] == 'hsv':
         frame = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
@@ -57,14 +61,14 @@ def findCentroid(frame, limits_dict, SP):
     x = int(x)
     y = int(y)
 
-    #show selected area
-    M_SA = np.zeros(labels.shape, dtype=np.uint8)
-    M_SA[labels == big_area_idx] = 255
-    frame_one_area = np.copy(frame)
-    frame_one_area[M_SA == 255] = (0,255,0)
+    if len(stats) != 1:
+        #show selected area
+        M_SA = np.zeros(labels.shape, dtype=np.uint8)
+        M_SA[labels == big_area_idx] = 255
+        frame_one_area[M_SA == 255] = (0,255,0)
 
-    #show centroid of selected area
-    frame_one_area = cv.circle(frame_one_area, (x,y), 5, (0,0,255), -1)
+        #show centroid of selected area
+        frame_one_area = cv.circle(frame_one_area, (x,y), 5, (0,0,255), -1)
 
     #show binarized image
     cv.imshow('bin img', I_bin)
@@ -133,9 +137,9 @@ def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr):
         save_state = cv.imwrite(filename, I_f)
         #add delay ?
         if save_state:
-            print("Image capture saved") # apply colorama stuff
+            print(Fore.GREEN + "\nImage capture saved as\n" + Fore.RESET + filename) # apply colorama stuff
         else:
-            print("Error: Image capture not saved")
+            print(Fore.RED + "Error: Image capture not saved" + Fore.RESET)
     elif k == ord('p') or k == ord('k'):
         if AR:
             color = (255,255,255)
@@ -143,10 +147,8 @@ def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr):
             color = (0, 0, 0)
     elif k == ord('h') and opacity < 1.0:
         opacity = opacity + 0.1
-        print(opacity)
     elif k == ord('l') and opacity >0.05:
         opacity = opacity - 0.1
-        print(opacity)
             
     return color, brush_size, opacity, I
 
@@ -220,7 +222,6 @@ def main():
 
 
     args = parser.parse_args()
-    print(vars(args))
     
     AR = args.augmented_reality
     SP = args.use_shake_prevention
@@ -231,7 +232,8 @@ def main():
 
 #print program initialization
     keyboard_shortcuts = Fore.RED + "Keyboard shortcuts\n" + Fore.RESET
-    keyboard_shortcuts += """r : change brush color to RED \n
+    keyboard_shortcuts += """\n
+    r : change brush color to RED \n
     g : change brush color to GREEN \n 
     b : change brush color to BLUE \n 
     p, k : change brush color to BLACK \n 
@@ -241,15 +243,17 @@ def main():
     l : decrease brush opacity \n 
     e : eraser brush \n 
     c : clear all drawings \n 
-    w, s : write/save drawing to file\n\n"""
+    w, s : write/save drawing to file\n"""
 
     hello_text = "----------------------------------------------------------\n\n"
     hello_text += Fore.GREEN + "AUGMENTED REALITY PAINT\n" + Fore.RESET
     hello_text += "Use a colored object to paint the world around you\n\n"
     hello_text += keyboard_shortcuts
-    hello_text += "----------------------------------------------------------\n\n"
 
     print(hello_text)
+    
+    print(Fore.RED + "Your settings: " + Fore.RESET)
+    print(vars(args))
 
     camera_number = int(args.camera_number)
     cap = cv.VideoCapture(camera_number)
@@ -294,8 +298,11 @@ def main():
 
         k = cv.waitKey(1)
         
-cv.destroyAllWindows()
-    
+    cv.destroyAllWindows()
+
+    print("\nThank you for using AR Paint\nCreated by:\n\t- Bruno Nunes\n\t- Diogo Santos\n\t- Francisco Power\n")    
+    print("----------------------------------------------------------\n\n")
+
         
 
 if __name__ == "__main__":
