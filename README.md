@@ -14,6 +14,7 @@ optional arguments:
   -cn CAMERA_NUMBER, --camera_number CAMERA_NUMBER
                         Number of camera to use
 ```
+The default camera number is 0, as this is the most common one.
 
 ***
 
@@ -51,10 +52,10 @@ The --use_shake_prevention funtionality creates a smoother drawing and allows yo
 
 ### Keyboard shortcuts
 
-- **r** : change brush color to RED
-- **g** : change brush color to GREEN
-- **b** : change brush color to BLUE
-- **p**, **k** : change brush color to BLACkK
+- **r** : change brush color to RED ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+)
+- **g** : change brush color to GREEN ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+)
+- **b** : change brush color to BLUE ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+)
+- **p**, **k** : change brush color to BLACkK ![#000000](https://via.placeholder.com/15/000000/000000?text=+)
 - **\+** : increase brush size
 - **\-** : decrease brush size
 - **h** : increase brush opacity

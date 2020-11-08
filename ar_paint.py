@@ -93,20 +93,25 @@ def findCentroid(frame, limits_dict, SP, show_tool):
 # -------------------------------------------------------------------------
 
 def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr, show_tool):
-    """[summary]
+    """[Read different keys to interact with the paint, enabling various features, such
+    as color, brush size and opacity changes as well as rubber feature and clear canvas.
+    Then save the canvas as a png file.]
 
     Args:
-        k ([type]): [description]
-        I ([type]): [description]
-        I_f ([type]): [description]
-        frame ([type]): [description]
-        AR ([type]): [description]
-        brush_size ([type]): [description]
-        opacity ([type]): [description]
-        clr ([type]): [description]
+        k ([integer]): [Key]
+        I ([np.ndarray]): [Inicial canvas]
+        I_f ([np,ndarray]): [Final canvas (copy of the initial)]
+        frame ([np.ndarray]): [Original image]
+        AR ([boolean]): [Augmented reality mode]
+        brush_size ([integer]): [Change the brush size]
+        opacity ([float]): [Change the opacity]
+        clr ([tuple]): [change the color]
 
     Returns:
-        [type]: [description]
+        [Color]: [Color chosen]
+        [Brush size]: [Brush size chosen]
+        [Opacity]: [Opacity chosen]
+        [I]: [Return the canvas every cycle]
     """
     color = clr
     
@@ -154,27 +159,30 @@ def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr, show_tool):
 
     elif k == ord('t'):
         show_tool = not show_tool
-            
+
     return color, brush_size, opacity, I, show_tool
 
 # -------------------------------------------------------------------------
 
 def paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity):    
-    """[summary]
+    """[Connect the dots p1 and p2 every cycle to draw a line between them. If
+    AR mode is chosen then it paints on the frame of video otherwise it will paint
+    on a white canvas. Inside AR mode, if opacity = 1 then  ]
 
     Args:
-        drawing ([type]): [description]
-        frame ([type]): [description]
-        I ([type]): [description]
-        p1 ([type]): [description]
-        p2 ([type]): [description]
-        color ([type]): [description]
-        brush_size ([type]): [description]
-        AR ([type]): [description]
-        opacity ([type]): [description]
+        drawing ([boolean]): [Is true when p1 or p2 != 0]
+        frame ([np.ndarray]): [Original image]
+        I ([np.ndarray]): [Initial canvas]
+        p1 ([tuple]): [Coordinates of p1]
+        p2 ([tuple]): [Coordinates of p2]
+        color ([tuple]): [Color that comes from keyboard mapping]
+        brush_size ([Integer]): [Brush size from keyboard mapping]
+        AR ([boolean]): [Augmented reality mode]
+        opacity ([float]): [Opacity from keyboard mapping]
 
     Returns:
-        [type]: [description]
+        [I]: [Initial canvas]
+        [I_f]: [copy of I // If AR, I_f is the addition of the frame with the canvas]
     """
 
     if drawing:
@@ -201,7 +209,9 @@ def paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity):
 # -------------------------------------------------------------------------
 
 def main():
-    """[summary]
+    """[Define the arguments, json file, camera number, AR mode and  USP mode. Load
+    the json file. Useful information about the program and initialization of canvas,
+    video, color and opacity. Define drawing mode and call the other functions.]
     """
     # ----------DEFINITION OF PARSER ARGUMENTS----------------
     parser = argparse.ArgumentParser(description=Fore.RED + 'Augmented Reality Paint - ' + Style.RESET_ALL + 'Paint the world around you')
