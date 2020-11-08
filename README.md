@@ -62,6 +62,7 @@ The --use_shake_prevention funtionality creates a smoother drawing and allows yo
 - **l** : decrease brush opacity
 - **e** : eraser brush
 - **c** : clear all drawings
+- **t** : show/hide drawing tool marker
 - **w**, **s** : write/save drawing to file
 
 
