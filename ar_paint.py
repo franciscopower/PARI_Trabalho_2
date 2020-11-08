@@ -14,7 +14,7 @@ import argparse
 from time import ctime
 # ---------------------------------
 
-def findCentroid(frame, limits_dict, SP):
+def findCentroid(frame, limits_dict, SP, show_tool):
     """Find the centroid of the largest blob given in an image, given a certain dictionary with binarization limits
         If shake prevention (SP) mode is active, return centroid as (0,0) 
         
@@ -25,6 +25,7 @@ def findCentroid(frame, limits_dict, SP):
 
     Returns:
         tuple: (x,y) coordinates of centroid of largest blob
+        np.ndarray: frame_one_area camera imagem with drawing tool marked
     """
     
     #create copy of frame
@@ -62,10 +63,11 @@ def findCentroid(frame, limits_dict, SP):
     y = int(y)
 
     if len(stats) != 1:
-        #show selected area
-        M_SA = np.zeros(labels.shape, dtype=np.uint8)
-        M_SA[labels == big_area_idx] = 255
-        frame_one_area[M_SA == 255] = (0,255,0)
+        if show_tool:
+            #show selected area
+            M_SA = np.zeros(labels.shape, dtype=np.uint8)
+            M_SA[labels == big_area_idx] = 255
+            frame_one_area[M_SA == 255] = (0,255,0)
 
         #show centroid of selected area
         frame_one_area = cv.circle(frame_one_area, (x,y), 5, (0,0,255), -1)
@@ -90,7 +92,7 @@ def findCentroid(frame, limits_dict, SP):
 
 # -------------------------------------------------------------------------
 
-def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr):
+def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr, show_tool):
     """[summary]
 
     Args:
@@ -149,8 +151,11 @@ def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr):
         opacity = opacity + 0.1
     elif k == ord('l') and opacity >0.05:
         opacity = opacity - 0.1
+
+    elif k == ord('t'):
+        show_tool = not show_tool
             
-    return color, brush_size, opacity, I
+    return color, brush_size, opacity, I, show_tool
 
 # -------------------------------------------------------------------------
 
@@ -242,7 +247,8 @@ def main():
     h : increase brush opacity \n 
     l : decrease brush opacity \n 
     e : eraser brush \n 
-    c : clear all drawings \n 
+    c : clear all drawings \n
+    t : show/hide drawing tool marker \n 
     w, s : write/save drawing to file\n"""
 
     hello_text = "----------------------------------------------------------\n\n"
@@ -270,18 +276,21 @@ def main():
     # initialize final canvas
     I_f = np.copy(I)   
     
-    #brush initializarion    
+    #brush initialization
     brush_size = 10
     opacity = 1.0
-    
+
+    #other initializations
     k =''
     p1 = (0,0)
     drawing = False
+    show_tool = True
+
     # ------ video starts-------------------
     while cap.isOpened() and k != ord('q'):
     
         _,frame = cap.read()
-        p2, frame = findCentroid(frame, limits_dict, SP)
+        p2, frame = findCentroid(frame, limits_dict, SP, show_tool)
         
         if p1 == (0, 0) or p2 ==(0, 0):
             drawing = False
@@ -290,7 +299,7 @@ def main():
         
         I, I_f = paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity)
         
-        color, brush_size, opacity, I = keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, color)
+        color, brush_size, opacity, I, show_tool = keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, color, show_tool)
         p1 = p2
         
         cv.imshow("Live feed", frame)
