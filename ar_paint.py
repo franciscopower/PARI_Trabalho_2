@@ -47,23 +47,28 @@ def findCentroid(frame, limits_dict, SP):
 
     #create labels
     _, labels, stats, centroids = cv.connectedComponentsWithStats(I_bin, connectivity=4)
+
     #identify largest area
     stats[np.where(stats[:, 4] == stats[:, 4].max())[0][0], :] = 0
     big_area_idx = np.where(stats[:, 4] == stats[:, 4].max())[0][0]
+
     #find centroid
     x, y = centroids[big_area_idx]
     x = int(x)
     y = int(y)
 
     #show selected area
-    
-    #show centroid of selected area    
-    # frame_one_area = cv.circle(frame_one_area, (x,y), 5, (0,0,255), -1)
-        
+    M_SA = np.zeros(labels.shape, dtype=np.uint8)
+    M_SA[labels == big_area_idx] = 255
+    frame_one_area = np.copy(frame)
+    frame_one_area[M_SA == 255] = (0,255,0)
+
+    #show centroid of selected area
+    frame_one_area = cv.circle(frame_one_area, (x,y), 5, (0,0,255), -1)
+
     #show binarized image
-    cv.imshow('bin img',I_bin)
-    # cv.imshow('Original selected area', frame_one_area)
-    
+    cv.imshow('bin img', I_bin)
+
     #use shake prevention
     if SP:
         # discard if area is too small
@@ -77,7 +82,7 @@ def findCentroid(frame, limits_dict, SP):
     else:
         pass
     
-    return (x,y)
+    return (x,y), frame_one_area
 
 # -------------------------------------------------------------------------
 
@@ -176,15 +181,15 @@ def paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity):
             hsv = np.copy(I)
             hsv = hsv.astype(np.uint8)
             hsv = cv.cvtColor(hsv, cv.COLOR_BGR2HSV)
-            M = 255-cv.inRange(hsv, (0,0,0), (255,0,0))
+            M = 255-cv.inRange(hsv, (0, 0, 0), (255, 0, 0))
             M = M.astype(np.uint8)
-            I_f[M==255] = I[M==255]
+            I_f[M == 255] = I[M == 255]
             
         else:
             I_f = I_f.astype(np.uint8)
             I_f = cv.addWeighted(frame, 1, I_f, opacity, 0)
     
-    return I,I_f
+    return I, I_f
 
 # -------------------------------------------------------------------------
 
@@ -237,7 +242,7 @@ def main():
     e : eraser brush \n 
     c : clear all drawings \n 
     w, s : write/save drawing to file\n\n"""
-    
+
     hello_text = "----------------------------------------------------------\n\n"
     hello_text += Fore.GREEN + "AUGMENTED REALITY PAINT\n" + Fore.RESET
     hello_text += "Use a colored object to paint the world around you\n\n"
@@ -253,11 +258,11 @@ def main():
     # initialize base canvas and brush color
     if AR:
         I = np.zeros(frame.shape)
-        color = (255,255,255)
+        color = (255, 255, 255)
     else:
         I = np.ones(frame.shape)*255   
-        color = (0,0,0)  
-        
+        color = (0,0,0)
+
     # initialize final canvas
     I_f = np.copy(I)   
     
@@ -265,16 +270,16 @@ def main():
     brush_size = 10
     opacity = 1.0
     
-    k=''
+    k =''
     p1 = (0,0)
     drawing = False
     # ------ video starts-------------------
     while cap.isOpened() and k != ord('q'):
     
         _,frame = cap.read()
-        p2 = findCentroid(frame, limits_dict, SP)
+        p2, frame = findCentroid(frame, limits_dict, SP)
         
-        if p1 == (0,0) or p2 ==(0,0):
+        if p1 == (0, 0) or p2 ==(0, 0):
             drawing = False
         else: 
             drawing = True
@@ -284,8 +289,8 @@ def main():
         color, brush_size, opacity, I = keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, color)
         p1 = p2
         
-        cv.imshow("Paint", frame)
-        cv.imshow("Live feed", I_f)
+        cv.imshow("Live feed", frame)
+        cv.imshow("Paint", I_f)
 
         k = cv.waitKey(1)
         
