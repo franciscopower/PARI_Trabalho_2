@@ -193,22 +193,22 @@ def main():
     """
     # ----------DEFINITION OF PARSER ARGUMENTS----------------
     parser = argparse.ArgumentParser(description='Definition of ' + Fore.RED + 'paint parameters' + Style.RESET_ALL)
-    parser.add_argument('-' + Fore.CYAN + 'jf' + Fore.RESET,
+    parser.add_argument('-jf',
                         '--json_file',
                         type=str,
                         default=None,
                         required=True,
                         help='json file with this ' + Fore.GREEN + 'limits ' + Style.RESET_ALL + 'defined in color segmenter')
-    parser.add_argument('-' + Fore.CYAN + 'cn' + Fore.RESET,
+    parser.add_argument('-cn',
                         '--camera_number',
                         type=int,
                         help='Number of ' + Fore.GREEN + ' camera ' + Style.RESET_ALL + 'to use',
                         default='0')
-    parser.add_argument('-' + Fore.CYAN + 'AR' + Fore.RESET,
+    parser.add_argument('-AR',
                         '--augmented_reality',
                         action='store_true',
                         help='Definition of ' + Fore.GREEN + 'paint type ' + Style.RESET_ALL + 'display')
-    parser.add_argument('-' + Fore.CYAN + 'USP' + Fore.RESET,
+    parser.add_argument('-USP',
                         '--use_shake_prevention',
                         action='store_true',
                         help='Add function - ' + Fore.GREEN + 'shake prevention' + Style.RESET_ALL)
@@ -224,9 +224,27 @@ def main():
     with open(args.json_file) as f:
         limits_dict = json.load(f)
 
-    # Window names
-    paint_window = "Paint"
-    live_window = "Live feed" 
+#print program initialization
+    keyboard_shortcuts = Fore.RED + "Keyboard shortcuts\n" + Fore.RESET
+    keyboard_shortcuts += """r : change brush color to RED \n
+    g : change brush color to GREEN \n 
+    b : change brush color to BLUE \n 
+    p, k : change brush color to BLACK \n 
+    + : increase brush size \n 
+    - : decrease brush size \n 
+    h : increase brush opacity \n 
+    l : decrease brush opacity \n 
+    e : eraser brush \n 
+    c : clear all drawings \n 
+    w, s : write/save drawing to file\n\n"""
+    
+    hello_text = "----------------------------------------------------------\n\n"
+    hello_text += Fore.GREEN + "AUGMENTED REALITY PAINT\n" + Fore.RESET
+    hello_text += "Use a colored object to paint the world around you\n\n"
+    hello_text += keyboard_shortcuts
+    hello_text += "----------------------------------------------------------\n\n"
+
+    print(hello_text)
 
     camera_number = int(args.camera_number)
     cap = cv.VideoCapture(camera_number)
@@ -239,7 +257,7 @@ def main():
     else:
         I = np.ones(frame.shape)*255   
         color = (0,0,0)  
-        cv.cvtColor(I, cv.color_bgr2)
+        
     # initialize final canvas
     I_f = np.copy(I)   
     
@@ -266,8 +284,8 @@ def main():
         color, brush_size, opacity, I = keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, color)
         p1 = p2
         
-        cv.imshow(live_window, frame)
-        cv.imshow(paint_window, I_f)
+        cv.imshow("Paint", frame)
+        cv.imshow("Live feed", I_f)
 
         k = cv.waitKey(1)
         
