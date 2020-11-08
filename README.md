@@ -52,7 +52,7 @@ The --use_shake_prevention funtionality creates a smoother drawing and allows yo
 
 ### Keyboard shortcuts
 
-- **r** : change brush color to RED
+- **r** : change brush color to <span style="color: green"> Some green text </span> RED
 - **g** : change brush color to GREEN
 - **b** : change brush color to BLUE
 - **p**, **k** : change brush color to BLACkK
