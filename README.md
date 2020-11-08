@@ -14,6 +14,7 @@ optional arguments:
   -cn CAMERA_NUMBER, --camera_number CAMERA_NUMBER
                         Number of camera to use
 ```
+The default camera number is 0, as this is the most common one.
 
 ***
 
