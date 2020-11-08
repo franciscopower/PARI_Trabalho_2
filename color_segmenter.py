@@ -38,7 +38,7 @@ def main():
     window_name = 'window - Ex3d'
     
     #parsing
-    parser = argparse.ArgumentParser(description="Color segmentation")
+    parser = argparse.ArgumentParser(description="Color segmentation of video input")
     parser.add_argument('-hsv', '--segmentate_in_hsv', help = 'If selected, segmentation will be in hsv', action='store_true')
     parser.add_argument('-cn', '--camera_number', help='Number of camera to use', default='0')
     args = parser.parse_args()

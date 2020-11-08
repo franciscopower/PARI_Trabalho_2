@@ -192,7 +192,7 @@ def main():
     """[summary]
     """
     # ----------DEFINITION OF PARSER ARGUMENTS----------------
-    parser = argparse.ArgumentParser(description='Definition of ' + Fore.RED + 'paint parameters' + Style.RESET_ALL)
+    parser = argparse.ArgumentParser(description=Fore.RED + 'Augmented Reality Paint - ' + Style.RESET_ALL + 'Paint the world around you')
     parser.add_argument('-jf',
                         '--json_file',
                         type=str,
