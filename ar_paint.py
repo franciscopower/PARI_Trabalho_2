@@ -93,25 +93,25 @@ def findCentroid(frame, limits_dict, SP, show_tool):
 # -------------------------------------------------------------------------
 
 def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr, show_tool):
-    """[Read different keys to interact with the paint, enabling various features, such
+    """Read different keys to interact with the paint, enabling various features, such
     as color, brush size and opacity changes as well as rubber feature and clear canvas.
-    Then save the canvas as a png file.]
+    Then save the canvas as a png file.
 
     Args:
-        k ([integer]): [Key]
-        I ([np.ndarray]): [Inicial canvas]
-        I_f ([np,ndarray]): [Final canvas (copy of the initial)]
-        frame ([np.ndarray]): [Original image]
-        AR ([boolean]): [Augmented reality mode]
-        brush_size ([integer]): [Change the brush size]
-        opacity ([float]): [Change the opacity]
-        clr ([tuple]): [change the color]
+        k (integer): Key
+        I (np.ndarray): Inicial canvas
+        I_f (np,ndarray): Final canvas (copy of the initial)
+        frame (np.ndarray): Original image
+        AR (boolean): Augmented reality mode
+        brush_size (integer): Change the brush size
+        opacity (float): Change the opacity
+        clr (tuple): change the color
 
     Returns:
-        [Color]: [Color chosen]
-        [Brush size]: [Brush size chosen]
-        [Opacity]: [Opacity chosen]
-        [I]: [Return the canvas every cycle]
+        tuple: Color chosen
+        integer: Brush size chosen
+        integer: Opacity chosen
+        np.ndarray: Return the canvas every cycle
     """
     color = clr
     
@@ -170,19 +170,19 @@ def paint(drawing, frame, I, p1, p2, color, brush_size, AR, opacity):
     on a white canvas. Inside AR mode, if opacity = 1 then  ]
 
     Args:
-        drawing ([boolean]): [Is true when p1 or p2 != 0]
-        frame ([np.ndarray]): [Original image]
-        I ([np.ndarray]): [Initial canvas]
-        p1 ([tuple]): [Coordinates of p1]
-        p2 ([tuple]): [Coordinates of p2]
-        color ([tuple]): [Color that comes from keyboard mapping]
-        brush_size ([Integer]): [Brush size from keyboard mapping]
-        AR ([boolean]): [Augmented reality mode]
-        opacity ([float]): [Opacity from keyboard mapping]
+        drawing (boolean): Is true when p1 or p2 != 0
+        frame (np.ndarray): Original image
+        I (np.ndarray): Initial canvas
+        p1 (tuple): Coordinates of p1
+        p2 (tuple): Coordinates of p2
+        color (tuple): Color that comes from keyboard mapping
+        brush_size (Integer): Brush size from keyboard mapping
+        AR (boolean): Augmented reality mode
+        opacity (float): Opacity from keyboard mapping
 
     Returns:
-        [I]: [Initial canvas]
-        [I_f]: [copy of I // If AR, I_f is the addition of the frame with the canvas]
+        np.ndarray: Initial canvas
+        nd.nparray: copy of I // If AR, I_f is the addition of the frame with the canvas
     """
 
     if drawing:
