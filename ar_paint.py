@@ -81,6 +81,7 @@ def findCentroid(frame, limits_dict, SP, show_tool):
         if stats[big_area_idx, 4] < frame.shape[0]*frame.shape[1]*0.01:
             x = 0
             y = 0
+            
             if len(stats) != 1:
                 if show_tool:
                     #show selected area in red
@@ -237,12 +238,17 @@ def main():
                         '--use_shake_prevention',
                         action='store_true',
                         help='Add function - ' + Fore.GREEN + 'shake prevention' + Style.RESET_ALL)
+    parser.add_argument('-M',
+                        '--mirror_image',
+                        action='store_true',
+                        help= Fore.GREEN + 'Mirror image' + Style.RESET_ALL + ' captured by camera')
 
 
     args = parser.parse_args()
     
     AR = args.augmented_reality
     SP = args.use_shake_prevention
+    mirror = args.mirror_image
 
     # Load json files
     with open(args.json_file) as f:
@@ -276,7 +282,9 @@ def main():
     
     print(Fore.RED + "Your settings: " + Fore.RESET)
     print(vars(args))
-
+    
+    
+    
     camera_number = int(args.camera_number)
     cap = cv.VideoCapture(camera_number)
     _,frame = cap.read()
@@ -306,6 +314,10 @@ def main():
     while cap.isOpened() and k != ord('q'):
     
         _,frame = cap.read()
+       
+        if mirror:
+            frame = cv.flip(frame, 1)
+        
         p2, frame = findCentroid(frame, limits_dict, SP, show_tool)
         
         if p1 == (0, 0) or p2 ==(0, 0):
