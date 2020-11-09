@@ -61,12 +61,13 @@ def findCentroid(frame, limits_dict, SP, show_tool):
     x, y = centroids[big_area_idx]
     x = int(x)
     y = int(y)
+    
+    M_SA = np.zeros(labels.shape, dtype=np.uint8)
+    M_SA[labels == big_area_idx] = 255
 
     if len(stats) != 1:
         if show_tool:
-            #show selected area
-            M_SA = np.zeros(labels.shape, dtype=np.uint8)
-            M_SA[labels == big_area_idx] = 255
+            #show selected area in green
             frame_one_area[M_SA == 255] = (0,255,0)
             #show centroid of selected area
             frame_one_area = cv.circle(frame_one_area, (x,y), 5, (0,0,255), -1)
@@ -80,12 +81,15 @@ def findCentroid(frame, limits_dict, SP, show_tool):
         if stats[big_area_idx, 4] < frame.shape[0]*frame.shape[1]*0.01:
             x = 0
             y = 0
+            if len(stats) != 1:
+                if show_tool:
+                    #show selected area in red
+                    frame_one_area[M_SA == 255] = (0,0,255)
         # discard if it cannot find any whitepoints
         if len(stats) == 1:
             x = 0
             y = 0
-    else:
-        pass
+
     
     return (x,y), frame_one_area
 
