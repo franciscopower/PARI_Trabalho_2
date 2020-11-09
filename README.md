@@ -1,8 +1,8 @@
 # Augmented Reality Paint
-This project is based on a powerful library called OpenCV that has tools to help with image processing. It is a mix of two different programs that together will allow the creation of an Augmented Reality Paint! Following, we will give some inside on how they work.
+This project is based on a powerful library called OpenCV that has tools to help with image processing. It is a mix of two different programs that together will allow the creation of an Augmented Reality Paint! Following, we will give some insight on how they work.
 
 ## Color segmenter
-The color segmenter is the first requirement to do the setup so we can work with the AR Paint. Basically, we have 6 trackbars that we will use to define the max and min of the BGR colors (blue, green and red) or also in our programar the HSV (hue, saturation and value) in order to segment the pixels of the color of the object that we will use as a marker. As soon as we are set with the values, we save this data on a library called Limits as a json file and then we move on to the next project (AR Paint)!
+The color segmenter is the first requirement to do the setup of the AR Paint. Basically, we have 6 trackbars that we will use to define the max and min of the **BGR**  (blue, green and red) or **HSV** (hue, saturation and value) values in order to segmentate the pixels of the color of the object that we will use as a brush. As soon as we are set with the values, we save this data in a library called *limits* as a *.json* file and then we move on to the next program, AR Paint.
 
 ### How to use 
 
@@ -55,11 +55,11 @@ The --use_shake_prevention funtionality creates a smoother drawing and allows yo
 - **r** : change brush color to RED ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+)
 - **g** : change brush color to GREEN ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+)
 - **b** : change brush color to BLUE ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+)
-- **p**, **k** : change brush color to BLACkK ![#000000](https://via.placeholder.com/15/000000/000000?text=+)
+- **p**, **k** : change brush color to BLACK ![#000000](https://via.placeholder.com/15/000000/000000?text=+) or WHITE ![#FFFFFF](https://via.placeholder.com/15/FFFFFF/000000?text=+) if AR mode is used 
 - **\+** : increase brush size
 - **\-** : decrease brush size
-- **h** : increase brush opacity
-- **l** : decrease brush opacity
+- **h** : increase drawing opacity (AR Mode only)
+- **l** : decrease drawing opacity (AR Mode only)
 - **e** : eraser brush
 - **c** : clear all drawings
 - **t** : show/hide drawing tool marker
@@ -68,10 +68,10 @@ The --use_shake_prevention funtionality creates a smoother drawing and allows yo
 
 ## Required libraries
 
-### OpenCV
-`pip install opencv-python`
-### Colorama
-`pip install colorama`
+- **OpenCV**
+    `pip install opencv-python`
+- **Colorama**
+    `pip install colorama`
 
 ***
 Trabalho 2 da unidade curricular de Projeto em Automação e Robótica Industrial, Mestrado Integrado em Engenharia Mecânica, Universidade de Aveiro.
