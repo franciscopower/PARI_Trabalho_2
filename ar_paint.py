@@ -68,9 +68,8 @@ def findCentroid(frame, limits_dict, SP, show_tool):
             M_SA = np.zeros(labels.shape, dtype=np.uint8)
             M_SA[labels == big_area_idx] = 255
             frame_one_area[M_SA == 255] = (0,255,0)
-
-        #show centroid of selected area
-        frame_one_area = cv.circle(frame_one_area, (x,y), 5, (0,0,255), -1)
+            #show centroid of selected area
+            frame_one_area = cv.circle(frame_one_area, (x,y), 5, (0,0,255), -1)
 
     #show binarized image
     cv.imshow('bin img', I_bin)
