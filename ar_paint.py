@@ -147,7 +147,7 @@ def keyboardMapping(k, I, I_f, frame, AR, brush_size, opacity, clr, show_tool):
             print(Fore.GREEN + "\nImage capture saved as\n" + Fore.RESET + filename) # apply colorama stuff
         else:
             print(Fore.RED + "Error: Image capture not saved" + Fore.RESET)
-    elif k == ord('p') or k == ord('k'):
+    elif k == ord('k'):
         if AR:
             color = (255,255,255)
         else:
@@ -251,15 +251,18 @@ def main():
     r : change brush color to RED \n
     g : change brush color to GREEN \n 
     b : change brush color to BLUE \n 
-    p, k : change brush color to BLACK \n 
+    k : change brush color to BLACK \n 
     + : increase brush size \n 
     - : decrease brush size \n 
-    h : increase brush opacity \n 
-    l : decrease brush opacity \n 
     e : eraser brush \n 
     c : clear all drawings \n
     t : show/hide drawing tool marker \n 
     w, s : write/save drawing to file\n"""
+    
+    if AR:
+        keyboard_shortcuts += """
+    h : increase drawing opacity \n 
+    l : decrease drawing opacity \n"""
 
     hello_text = "----------------------------------------------------------\n\n"
     hello_text += Fore.GREEN + "AUGMENTED REALITY PAINT\n" + Fore.RESET
