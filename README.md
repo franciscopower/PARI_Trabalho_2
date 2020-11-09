@@ -55,7 +55,7 @@ The --use_shake_prevention funtionality creates a smoother drawing and allows yo
 - **r** : change brush color to RED ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+)
 - **g** : change brush color to GREEN ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+)
 - **b** : change brush color to BLUE ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+)
-- **p**, **k** : change brush color to BLACK ![#000000](https://via.placeholder.com/15/000000/000000?text=+) or WHITE ![#FFFFFF](https://via.placeholder.com/15/FFFFFF/000000?text=+) if AR mode is used 
+- **k** : change brush color to BLACK ![#000000](https://via.placeholder.com/15/000000/000000?text=+) or WHITE ![#FFFFFF](https://via.placeholder.com/15/FFFFFF/000000?text=+) if AR mode is used 
 - **\+** : increase brush size
 - **\-** : decrease brush size
 - **h** : increase drawing opacity (AR Mode only)
