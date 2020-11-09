@@ -72,8 +72,8 @@ def findCentroid(frame, limits_dict, SP, show_tool):
             #show centroid of selected area
             frame_one_area = cv.circle(frame_one_area, (x,y), 5, (0,0,255), -1)
 
-    #show binarized image
-    cv.imshow('bin img', I_bin)
+    # #show binarized image
+    # cv.imshow('bin img', I_bin)
 
     #use shake prevention
     if SP:

@@ -42,6 +42,7 @@ optional arguments:
                         Definition of paint type display
   -USP, --use_shake_prevention
                         Add function - shake prevention
+  -M, --mirror_image    Mirror image captured by camera
 ```
 
 The default camera number is 0, as this is the most common one.
@@ -49,6 +50,8 @@ The default camera number is 0, as this is the most common one.
 If the --augmented_reality argument is used, the program will paint on the live video, as opposed to a white canvas.
 
 The --use_shake_prevention funtionality creates a smoother drawing and allows you to start and stop a brush stroke by hiding your "brush object".
+
+The --mirror_image functionality mirrors the image that the camera captures, making it easier to draw in the air.
 
 ### Keyboard shortcuts
 
