@@ -69,9 +69,9 @@ The --use_shake_prevention funtionality creates a smoother drawing and allows yo
 ## Required libraries
 
 - **OpenCV**
-    `pip install opencv-python`
+    + `pip install opencv-python`
 - **Colorama**
-    `pip install colorama`
+    + `pip install colorama`
 
 ***
 Trabalho 2 da unidade curricular de Projeto em Automação e Robótica Industrial, Mestrado Integrado em Engenharia Mecânica, Universidade de Aveiro.
