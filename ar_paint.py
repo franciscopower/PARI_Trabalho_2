@@ -267,9 +267,22 @@ def main():
     SP = args.use_shake_prevention
     mirror = args.mirror_image
     camera_number = int(args.camera_number)
-    # Load json files
-    with open(args.json_file) as f:
-        limits_dict = json.load(f)
+    
+    # Load json file, checking if it is correct
+    try:
+        with open(args.json_file) as f:
+            limits_dict = json.load(f)
+    except:
+        print(Fore.RED + "-----------------ERROR-----------------")
+        print("*.json file does not exist, is empty, or does not contain the right information." + Fore.RESET)
+        print("Please try again with a new .json file.\nYou can generate one using the program " + Fore.GREEN + "color_segmenter.py\n" + Fore.RESET)
+        exit(0)
+    else:
+        if not ( "limits" in limits_dict.keys() and "color_mode" in limits_dict.keys() ):
+            print(Fore.RED + "-----------------ERROR-----------------")
+            print("*.json file does not contain the correct information." + Fore.RESET)
+            print("Please try again with a new .json file.\nYou can generate one using the program " + Fore.GREEN + "color_segmenter.py" + Fore.RESET)
+            exit(0)
         
 
     #print program initialization

@@ -130,5 +130,5 @@ dmypy.json
 .vscode/
 
 # files created by programs
-.json
-.png
+*.json
+*.png
