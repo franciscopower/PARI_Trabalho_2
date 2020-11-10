@@ -72,7 +72,7 @@ def main():
     print(vars(args))
 
 
-    print("\nThank you for using Color Segmenter\n "+ Fore.CYAN + "Created by:" + Fore.RESET + "\n\t- Bruno Nunes\n\t- Diogo Santos\n\t- Francisco Power\n")
+    print("\nThank you for using Color Segmenter\n "+ Fore.CYAN + "Masterpiece creators:" + Fore.RESET + "\n\t- Bruno Nunes\n\t- Diogo Santos\n\t- Francisco Power\n")
     print("----------------------------------------------------------\n\n")
 
     if hsv_mode:
