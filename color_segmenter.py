@@ -68,12 +68,11 @@ def main():
 
     print(hello_text)
 
-    print(Fore.RED + "Your settings: " + Fore.RESET)
+    print("Your settings: ")
     print(vars(args))
 
 
-    print("\nThank you for using Color Segmenter\n "+ Fore.CYAN + "Masterpiece creators:" + Fore.RESET + "\n\t- Bruno Nunes\n\t- Diogo Santos\n\t- Francisco Power\n")
-    print("----------------------------------------------------------\n\n")
+
 
     if hsv_mode:
         track_names = ['min H', 'max H', 'min S', 'max S', 'min V', 'max V']
@@ -138,15 +137,16 @@ def main():
             # save to json file
             file_name = 'limits.json'
             with open(file_name, 'w') as file_handle:
-                print('writing dictionary d to file ' + file_name)
+                print(Fore.GREEN + '\nWriting dictionary to file limits.json ' + Fore.RESET + file_name)
                 json.dump(limits_dict, file_handle)  # d is the dicionary
                 pprint(limits_dict)
             pass
-            
-    
     
     cap.release()
     cv.destroyAllWindows()
+
+    print("\nThank you for using Color Segmenter\n" + Fore.CYAN + "Masterpiece creators:" + Fore.RESET + "\n\t- Bruno Nunes\n\t- Diogo Santos\n\t- Francisco Power\n")
+    print("----------------------------------------------------------\n\n")
 
     
 
