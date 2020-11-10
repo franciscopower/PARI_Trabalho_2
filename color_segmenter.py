@@ -8,6 +8,8 @@ from pprint import pprint
 import numpy as np
 
 # Global variables
+from colorama import Fore
+
 limits_dict = {
     'limits': {
         'BH': {'min': 0, 'max': 255},
@@ -39,12 +41,39 @@ def main():
     
     #parsing
     parser = argparse.ArgumentParser(description="Color segmentation of video input")
-    parser.add_argument('-hsv', '--segmentate_in_hsv', help = 'If selected, segmentation will be in hsv', action='store_true')
-    parser.add_argument('-cn', '--camera_number', help='Number of camera to use', default='0')
+    parser.add_argument('-hsv',
+                        '--segmentate_in_hsv',
+                        help='If selected, segmentation will be in hsv',
+                        action='store_true')
+    parser.add_argument('-cn',
+                        '--camera_number',
+                        help='Number of camera to use',
+                        default='0')
     args = parser.parse_args()
     
     hsv_mode = args.segmentate_in_hsv 
     camera_number = int(args.camera_number)
+
+    #Print intialization information
+
+    keyboard_shortcuts = Fore.RED + "Keyboard shortcuts\n" + Fore.RESET
+    keyboard_shortcuts += """
+    q : quit the program \n 
+    s,w : save/write the dictionary with limits as json file \n"""
+
+    hello_text = "----------------------------------------------------------\n\n"
+    hello_text += Fore.GREEN + "COLOR SEGMENTER\n" + Fore.RESET
+    hello_text += "Let your controler spirit take action! \n\n"
+    hello_text += keyboard_shortcuts
+
+    print(hello_text)
+
+    print(Fore.RED + "Your settings: " + Fore.RESET)
+    print(vars(args))
+
+
+    print("\nThank you for using Color Segmenter\n "+ Fore.CYAN + "Created by:" + Fore.RESET + "\n\t- Bruno Nunes\n\t- Diogo Santos\n\t- Francisco Power\n")
+    print("----------------------------------------------------------\n\n")
 
     if hsv_mode:
         track_names = ['min H', 'max H', 'min S', 'max S', 'min V', 'max V']
@@ -118,6 +147,7 @@ def main():
     
     cap.release()
     cv.destroyAllWindows()
+
     
 
 if __name__ == '__main__':
